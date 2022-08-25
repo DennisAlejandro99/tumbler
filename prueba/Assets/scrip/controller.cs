@@ -25,29 +25,49 @@ public class controller : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        rb.velocity = new Vector2(0, rb.velocity.y);
-        animator.SetInteger("Estado", 0);
-        if (Input.GetKey(KeyCode.RightArrow)) {
+        //posicion 0
+        if (Input.GetKey(KeyCode.RightArrow))
+        {
             rb.velocity = new Vector2(velocidad, rb.velocity.y);//que la velocidad cambie
             sr.flipX = false;
-            animator.SetInteger("Estado", 1);
+            if (puedeSaltar != false)
+            {
+                animator.SetInteger("Estado", 1);
+            }
         }
-        if (Input.GetKey(KeyCode.LeftArrow)) {
+        else if (Input.GetKey(KeyCode.LeftArrow))
+        {
             rb.velocity = new Vector2(-velocidad, rb.velocity.y);
             sr.flipX = true;
-            animator.SetInteger("Estado", 1);
+            if (puedeSaltar != false)
+            {
+                animator.SetInteger("Estado", 1);
+            }
         }
-        if (Input.GetKeyUp(KeyCode.Space) && puedeSaltar) {
-            rb.AddForce(Vector2.up * fuerzaSalto , ForceMode2D.Impulse);
+        else if (Input.GetKeyDown(KeyCode.Space) && puedeSaltar)
+        {
+            
+            rb.AddForce(Vector2.up * fuerzaSalto, ForceMode2D.Impulse);
             puedeSaltar = false;
+            animator.SetInteger("Estado", 3);
+            
+        }
+        else {
+            if (puedeSaltar != false) {
+                rb.velocity = new Vector2(0, rb.velocity.y);
+                animator.SetInteger("Estado", 0);
+            }
+                
         }
     }
 
-    private void OnCollisionEnter2D(Collision2D collision) // si hay colision  entonces entra aqui 
+    private void OnCollisionEnter2D(Collision2D other) // si hay colision  entonces entra aqui 
     {
         puedeSaltar = true;
-        if (collision.gameObject.tag == "enemy") { 
-            Debug.Log("estas muerto");
+        //Debug.Log("estas muerto");
+        if (other.gameObject.tag == "piso") {
+           
+            Debug.Log("estas en el suelo");
         }
     }
 }
