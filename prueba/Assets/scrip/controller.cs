@@ -4,10 +4,10 @@ using UnityEngine;
 
 public class controller : MonoBehaviour
 {
-    // Start is called before the first frame update
+    //Start is called before the first frame update
     public float velocidad = 10;
 
-    public bool puedeSaltar = false;
+    public bool puedeSaltar = true, salto_temp=true;
 
     public float fuerzaSalto = 10;
 
@@ -27,7 +27,12 @@ public class controller : MonoBehaviour
     {
 
          rb.velocity = new Vector2(0, rb.velocity.y);
-         animator.SetInteger("Estado", 0);
+        //if (salto_temp) {
+        if (puedeSaltar) {
+            animator.SetInteger("Estado", 0);
+        }
+            
+        //}
         //posicion 0
         if (Input.GetKeyDown(KeyCode.Z))
         {
@@ -38,16 +43,12 @@ public class controller : MonoBehaviour
             rb.velocity = new Vector2(velocidad, rb.velocity.y);
             animator.SetInteger("Estado", 1);
             sr.flipX = false;
-            Debug.Log("2");
         }
         if (Input.GetKey(KeyCode.LeftArrow))
         {
             rb.velocity = new Vector2(-velocidad, rb.velocity.y);
             sr.flipX = true;
-            if (puedeSaltar != false)
-            {
                 animator.SetInteger("Estado", 1);
-            }
         }
         if (Input.GetKey(KeyCode.X) && Input.GetKey(KeyCode.RightArrow))
         {
@@ -65,9 +66,10 @@ public class controller : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Space) && puedeSaltar)
         {
+            animator.SetInteger("Estado", 3);
             rb.AddForce(Vector2.up * fuerzaSalto, ForceMode2D.Impulse);
             puedeSaltar = false;
-            animator.SetInteger("Estado", 3);
+            
 
         }
         
@@ -86,6 +88,7 @@ public class controller : MonoBehaviour
         //Debug.Log("estas muerto");
         if (other.gameObject.tag == "piso") {
            
+
             Debug.Log("estas en el suelo");
         }
     }
